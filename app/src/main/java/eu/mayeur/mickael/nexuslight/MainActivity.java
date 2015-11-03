@@ -16,6 +16,14 @@ package eu.mayeur.mickael.nexuslight;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
+
+import eu.powet.android.serialUSB.ISerial;
+import eu.powet.android.serialUSB.SerialError;
+import eu.powet.android.serialUSB.SerialEvent;
+import eu.powet.android.serialUSB.SerialListener;
+import eu.powet.android.serialUSB.UsbDeviceID;
+import eu.powet.android.serialUSB.UsbSerial;
 
 /*
  * MainActivity class that loads MainFragment
@@ -30,5 +38,28 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ISerial usb_serial = null;
+
+
+        usb_serial = new UsbSerial(UsbDeviceID.FT232RL, 19200, this);
+        usb_serial.open();
+
+
+        usb_serial.addEventListener(new SerialListener() {
+            @Override
+            public void incomingDataEvent(final SerialEvent evt) {
+                {
+                    Log.v("Main", "Event from Usb Serial" + new String(evt.read()));
+
+                }
+            }
+        });
+
+        try {
+            usb_serial.write("Hello World");
+        } catch (SerialError e) {
+            Log.v("Main", e.toString());
+        }
+        usb_serial.close();
     }
 }
