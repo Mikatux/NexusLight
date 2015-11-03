@@ -12,7 +12,7 @@
  * the License.
  */
 
-package nexuslight.mickael.mayeur.eu.nexuslight;
+package eu.mayeur.mickael.nexuslight;
 
 import java.net.URI;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package nexuslight.mickael.mayeur.eu.nexuslight;
+package eu.mayeur.mickael.nexuslight;
 
 import java.util.ArrayList;
 import java.util.List;

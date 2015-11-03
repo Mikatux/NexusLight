@@ -12,7 +12,7 @@
  * the License.
  */
 
-package nexuslight.mickael.mayeur.eu.nexuslight;
+package eu.mayeur.mickael.nexuslight;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;

@@ -1,4 +1,4 @@
-package nexuslight.mickael.mayeur.eu.nexuslight;
+package eu.mayeur.mickael.nexuslight;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
