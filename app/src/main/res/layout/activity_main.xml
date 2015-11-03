@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:id="@+id/main_browse_fragment"
     android:name="eu.mayeur.mickael.nexuslight.MainFragment"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    tools:context=".MainActivity" tools:deviceIds="tv" tools:ignore="MergeRootFrame" />
+    tools:context=".MainActivity" tools:deviceIds="tv" tools:ignore="MergeRootFrame" />-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/base_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#050608">
+    <TextView
+        android:id="@+id/atext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:text="Hello World" />
+</LinearLayout>
