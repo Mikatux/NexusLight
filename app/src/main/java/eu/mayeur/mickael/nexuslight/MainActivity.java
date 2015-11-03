@@ -15,15 +15,18 @@
 package eu.mayeur.mickael.nexuslight;
 
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.usb.UsbDeviceConnection;
+import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.util.Log;
 
-import eu.powet.android.serialUSB.ISerial;
-import eu.powet.android.serialUSB.SerialError;
-import eu.powet.android.serialUSB.SerialEvent;
-import eu.powet.android.serialUSB.SerialListener;
-import eu.powet.android.serialUSB.UsbDeviceID;
-import eu.powet.android.serialUSB.UsbSerial;
+import com.hoho.android.usbserial.driver.UsbSerialDriver;
+import com.hoho.android.usbserial.driver.UsbSerialPort;
+import com.hoho.android.usbserial.driver.UsbSerialProber;
+
+import java.io.IOException;
+import java.util.List;
 
 /*
  * MainActivity class that loads MainFragment
@@ -38,28 +41,45 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ISerial usb_serial = null;
 
-
-        usb_serial = new UsbSerial(UsbDeviceID.FT232RL, 19200, this);
-        usb_serial.open();
-
-
-        usb_serial.addEventListener(new SerialListener() {
-            @Override
-            public void incomingDataEvent(final SerialEvent evt) {
-                {
-                    Log.v("Main", "Event from Usb Serial" + new String(evt.read()));
-
-                }
-            }
-        });
-
-        try {
-            usb_serial.write("Hello World");
-        } catch (SerialError e) {
-            Log.v("Main", e.toString());
+        UsbManager manager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
+        if (availableDrivers.isEmpty()) {
+            return;
         }
-        usb_serial.close();
+
+// Open a connection to the first available driver.
+        UsbSerialDriver driver = availableDrivers.get(0);
+        UsbDeviceConnection connection = manager.openDevice(driver.getDevice());
+        if (connection == null) {
+            // You probably need to call UsbManager.requestPermission(driver.getDevice(), ..)
+            return;
+        }
+
+// Read some data! Most have just one port (port 0).
+        UsbSerialPort port = driver.getPorts().get(0);
+        try {
+            port.open(connection);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            port.setParameters(9600, 8, 1, 0);
+            byte buffer[] = new byte[16];
+            int numBytesRead = port.read(buffer, 1000);
+            Log.d("main", "Read " + numBytesRead + " bytes.");
+            byte[] test = new byte[]{0};
+            port.write(test, 100);
+        } catch (IOException e) {
+            Log.d("main", "Error");
+        } finally {
+            try {
+                port.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
     }
 }
