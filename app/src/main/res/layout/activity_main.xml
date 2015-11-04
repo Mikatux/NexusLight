@@ -25,6 +25,14 @@
         android:layout_marginBottom="27dp">
 
         <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Informations"
+            android:id="@+id/textView5"
+            android:textAlignment="center"
+            android:textSize="24dp" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LEDs"
@@ -67,18 +75,65 @@
                 android:ems="10"
                 android:id="@+id/editText2" />
         </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Informations"
-            android:id="@+id/textView5"
-            android:textAlignment="center"
-            android:textSize="24dp" />
+            <TextView
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:text="IP"
+                android:id="@+id/tv_ip" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/et_ip"
+                android:text="192.168.0.18" />
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connect"
+                android:id="@+id/bt_connect"
+                android:layout_gravity="center_horizontal|top" />
+        </FrameLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="128dp"
+                android:layout_height="wrap_content"
+                android:text="Message"
+                android:id="@+id/tv_message" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/et_message"
+                android:text="test" />
+        </LinearLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sned"
+                android:id="@+id/bt_send"
+                android:layout_gravity="center_horizontal|top" />
+        </FrameLayout>
     </LinearLayout>
 
 </LinearLayout>
