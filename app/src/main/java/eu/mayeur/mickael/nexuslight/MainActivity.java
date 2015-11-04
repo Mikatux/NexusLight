@@ -133,8 +133,12 @@ public class MainActivity extends Activity {
             return;
         }
         // video size
-        final int width = 210;
-        final int height = 90;
+        EditText heightview = (EditText) findViewById(R.id.et_height);
+        final int height = Integer.parseInt(heightview.getText().toString());
+
+        EditText widthview = (EditText) findViewById(R.id.et_width);
+        final int width = Integer.parseInt(widthview.getText().toString());
+
         File file = new File(Environment.getExternalStorageDirectory(),
                 "record-" + width + "x" + height + "-" + System.currentTimeMillis() + ".mp4");
         final int bitrate = 6000000;

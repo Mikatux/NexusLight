@@ -54,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/editText" />
+                android:id="@+id/et_height"
+                android:text="21" />
         </LinearLayout>
 
         <LinearLayout
@@ -73,7 +74,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/editText2" />
+                android:id="@+id/et_width"
+                android:text="9" />
         </LinearLayout>
         <LinearLayout
             android:orientation="horizontal"
