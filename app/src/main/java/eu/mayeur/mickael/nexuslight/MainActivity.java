@@ -37,12 +37,16 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import eu.mayeur.mickael.nexuslight.light.MirroringHelper;
+import eu.mayeur.mickael.nexuslight.service.LightsService;
+
 /*
  * MainActivity class that loads MainFragment
  */
 public class MainActivity extends Activity {
     private static final int REQUEST_CODE = 1;
     private boolean wsOpen = false;
+    MirroringHelper mMirroring;
 
     /**
      * Called when the activity is first created.
@@ -59,13 +63,6 @@ public class MainActivity extends Activity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
-    /**
-     * Checks if the app has permission to write to device storage
-     * <p/>
-     * If the app does not has permission then the user will be prompted to grant permissions
-     *
-     * @param activity
-     */
     public static void verifyStoragePermissions(Activity activity) {
         // Check if we have write permission
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -85,6 +82,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         verifyStoragePermissions(this);
+        mMirroring = MirroringHelper.get();
 
         Button connect = (Button) findViewById(R.id.bt_connect);
         EditText ipView = (EditText) findViewById(R.id.et_ip);
@@ -92,6 +90,13 @@ public class MainActivity extends Activity {
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mMirroring.isRunning()) {
+                    stop();
+                } else {
+                    //showProgress(R.string.connecting);
+                    mMirroring.askForPermission(MainActivity.this);
+                }
+                /*
                 if (!wsOpen){
                 connectWebSocket(ip);
                 }
@@ -106,6 +111,7 @@ public class MainActivity extends Activity {
                     Intent captureIntent = mMediaProjectionManager.createScreenCaptureIntent();
                     startActivityForResult(captureIntent, REQUEST_CODE);
                 }
+                */
             }
         });
 
@@ -124,7 +130,30 @@ public class MainActivity extends Activity {
 
 
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode != MirroringHelper.PERMISSION_CODE) {
+            return;
+        }
+        if (resultCode != RESULT_OK) {
+            Log.e("error","no permission");
+            //showError(R.string.give_permission);
+            return;
+        }
+        mMirroring.permissionGranted(resultCode, data);
+        Intent intent = new Intent(this, LightsService.class);
+        intent.setAction("START");
+        startService(intent);
+    }
+    private void stop() {
+        //stop light
 
+        Intent intent = new Intent(this, LightsService.class);
+        intent.setAction("STOP");
+        startService(intent);
+
+    }
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         MediaProjection mediaProjection = mMediaProjectionManager.getMediaProjection(resultCode, data);
@@ -148,7 +177,7 @@ public class MainActivity extends Activity {
         Toast.makeText(this, "Screen recorder is running...", Toast.LENGTH_SHORT).show();
         moveTaskToBack(true);
     }
-
+*/
     private void connectWebSocket(String ip) {
         URI uri;
         try {
