@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import eu.mayeur.mickael.nexuslight.core.App;
 import eu.mayeur.mickael.nexuslight.core.BaseAsyncTask;
 
@@ -18,7 +20,7 @@ public class LightsController {
     private boolean mDisconnected;
     private LightNetwork mNetworkContext;
 
-    private int mPreviousColor[] = {-1};
+    private ArrayList<Integer> mPreviousColors = new ArrayList<Integer>();
 
     public static LightsController get() {
         if (sInstance == null) {
@@ -31,12 +33,12 @@ public class LightsController {
         mDisconnected = false;
         mNetworkContext = new LightNetwork();
     }
-    public void changeColor(int lightId, int color) {
+    public void changeColor(ArrayList<Integer> colors) {
         Log.v("lightcontroller", "change color");
 
-        if (mWorkingFine && color != mPreviousColor[lightId]) {
-            mNetworkContext.setColor(lightId, color);
-            mPreviousColor[lightId] = color;
+        if (true || mWorkingFine && colors.equals(mPreviousColors)) {
+            mNetworkContext.setColor(colors);
+            mPreviousColors = colors;
         }
         else{
             Log.v("lightcontroller", "change color error "+ mWorkingFine);
@@ -97,6 +99,7 @@ public class LightsController {
 
     public void signalStop() {
         int color = App.get().getResources().getColor(android.R.color.white);
-        mNetworkContext.setColor(0, color);
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+        mNetworkContext.setColor(colors);
     }
 }

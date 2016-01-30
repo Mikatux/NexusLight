@@ -83,12 +83,12 @@ public class MirroringHelper {
     public void permissionGranted(int resultCode, Intent data) {
         mMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
         Log.v("mirror","permission granted");
-        mVirtualDisplay = createVirtualDisplay();
 
     }
 
     public void getLatestBitmap(final Listener listener) {
         Log.v("mirror","get last bitmap");
+        mVirtualDisplay = createVirtualDisplay();
         mImageReader = ImageReader.newInstance(Config.VIRTUAL_DISPLAY_WIDTH, Config.VIRTUAL_DISPLAY_HEIGHT, PixelFormat.RGBA_8888, 5);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
         Log.v("miror", "set surface");
@@ -118,7 +118,8 @@ public class MirroringHelper {
                             bos.close();
                             img.close();
                             mImageReader.close();
-                            //mVirtualDisplay.release();
+
+                            mVirtualDisplay.release();
                         } catch (IOException ignored) {
                             Log.v("miror", "eror generating bitmap");
 

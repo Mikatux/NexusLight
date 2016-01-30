@@ -3,6 +3,8 @@ package eu.mayeur.mickael.nexuslight.light;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import eu.mayeur.mickael.nexuslight.core.Config;
 import eu.mayeur.mickael.nexuslight.util.SleepTask;
 
@@ -40,7 +42,24 @@ public class ColorExtractor {
                 @Override
                 public void onBitmapAvailable(final Bitmap bitmap) {
                     Log.v("colorext", "get  bitmap");
-                    listener.onColorExtracted(bitmap.getPixel(0, 0));
+                    ArrayList<Integer> colors = new ArrayList<Integer>();
+                    for (int i = 0; i < Config.VIRTUAL_DISPLAY_WIDTH; i++) {
+                        colors.add( bitmap.getPixel(i, 0));
+                    }
+                    for (int i = 0; i<Config.VIRTUAL_DISPLAY_HEIGHT ; i++) {
+                        colors.add(bitmap.getPixel(Config.VIRTUAL_DISPLAY_WIDTH - 1, i));
+
+
+                    }
+                    for (int i = Config.VIRTUAL_DISPLAY_WIDTH-1; i>=0; i--) {
+                        colors.add(bitmap.getPixel(i, Config.VIRTUAL_DISPLAY_HEIGHT-1));
+
+                    }
+                    for (int i = Config.VIRTUAL_DISPLAY_HEIGHT-1; i >=0 ; i--) {
+                        colors.add(bitmap.getPixel(0, i));
+
+                    }
+                    listener.onColorExtracted(colors);
                     new SleepTask(Config.FREQUENCE_OF_SCREENSHOTS, new SleepTask.Listener() {
                         @Override
                         public void awoken() {
@@ -78,6 +97,6 @@ public class ColorExtractor {
     }
 
     public interface Listener {
-        public void onColorExtracted(int color);
+        public void onColorExtracted(ArrayList<Integer> color);
     }
 }

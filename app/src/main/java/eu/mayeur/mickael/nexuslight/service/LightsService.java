@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import eu.mayeur.mickael.nexuslight.MainActivity;
 import eu.mayeur.mickael.nexuslight.R;
 import eu.mayeur.mickael.nexuslight.core.Config;
@@ -82,11 +84,11 @@ public class LightsService extends Service {
         mLights.start();
         mColorExtractor.start(mMirroring, new ColorExtractor.Listener() {
             @Override
-            public void onColorExtracted(int color) {
-                Log.v("service","receive color"+ color);
+            public void onColorExtracted(ArrayList<Integer> colors) {
+                Log.v("service","receive color"+ colors.toString());
 
                 //  if (!mLocalSwitcher.isRunning()) {
-                mLights.changeColor(0, color);
+                mLights.changeColor(colors);
                 //  }
             }
         });
