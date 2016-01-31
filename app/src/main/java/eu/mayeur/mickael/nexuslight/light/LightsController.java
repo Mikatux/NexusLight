@@ -19,6 +19,7 @@ public class LightsController {
     private boolean mWorkingFine;
     private boolean mDisconnected;
     private LightNetwork mNetworkContext;
+   // private LightSerial mSerialContext;
 
     private ArrayList<Integer> mPreviousColors = new ArrayList<Integer>();
 
@@ -32,12 +33,14 @@ public class LightsController {
         mWorkingFine = false;
         mDisconnected = false;
         mNetworkContext = new LightNetwork();
+        //mSerialContext = new LightSerial();
     }
     public void changeColor(ArrayList<Integer> colors) {
-        Log.v("lightcontroller", "change color");
+       // Log.v("lightcontroller", "change color");
 
         if (true || mWorkingFine && colors.equals(mPreviousColors)) {
             mNetworkContext.setColor(colors);
+            //mSerialContext.setColor(colors);
             mPreviousColors = colors;
         }
         else{
@@ -67,9 +70,15 @@ public class LightsController {
 
     public void stop() {
         mDisconnected = true;
+
         if (mNetworkContext != null && mWorkingFine) {
             mNetworkContext.disconnect();
         }
+        /*
+        if (mSerialContext != null && mWorkingFine) {
+            mSerialContext.disconnect();
+        }
+        */
     }
     class TimeoutTask extends BaseAsyncTask {
 
@@ -85,6 +94,7 @@ public class LightsController {
         public void postExecute() {
 
             int numLights = mNetworkContext.getNbLight();
+           // int numLights = mSerialContext.getNbLight();
             Log.v("lightcontroller", "post execute"+ numLights);
 
             if (numLights == 0 || mDisconnected) {
@@ -101,5 +111,6 @@ public class LightsController {
         int color = App.get().getResources().getColor(android.R.color.white);
         ArrayList<Integer> colors = new ArrayList<Integer>();
         mNetworkContext.setColor(colors);
+       // mSerialContext.setColor(colors);
     }
 }

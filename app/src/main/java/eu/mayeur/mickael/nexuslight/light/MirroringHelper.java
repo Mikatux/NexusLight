@@ -83,21 +83,22 @@ public class MirroringHelper {
     public void permissionGranted(int resultCode, Intent data) {
         mMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
         Log.v("mirror","permission granted");
+        mVirtualDisplay = createVirtualDisplay();
+
 
     }
 
     public void getLatestBitmap(final Listener listener) {
-        Log.v("mirror","get last bitmap");
-        mVirtualDisplay = createVirtualDisplay();
+      //  Log.v("mirror","get last bitmap");
         mImageReader = ImageReader.newInstance(Config.VIRTUAL_DISPLAY_WIDTH, Config.VIRTUAL_DISPLAY_HEIGHT, PixelFormat.RGBA_8888, 5);
         mVirtualDisplay.setSurface(mImageReader.getSurface());
-        Log.v("miror", "set surface");
+       // Log.v("miror", "set surface");
 
         mImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
             @Override
             public void onImageAvailable(ImageReader reader) {
                mImageReader.setOnImageAvailableListener(null, null);
-                Log.v("miror", "image available");
+            //    Log.v("miror", "image available");
 
                 new BaseAsyncTask() {
 
@@ -106,7 +107,7 @@ public class MirroringHelper {
                     @Override
                     public void inBackground() {
                         try {
-                            Log.v("miror", "generating bitmap");
+                         //   Log.v("miror", "generating bitmap");
 
                             Image img = mImageReader.acquireLatestImage();
                             ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -119,9 +120,9 @@ public class MirroringHelper {
                             img.close();
                             mImageReader.close();
 
-                            mVirtualDisplay.release();
+                            //mVirtualDisplay.release();
                         } catch (IOException ignored) {
-                            Log.v("miror", "eror generating bitmap");
+                        //    Log.v("miror", "eror generating bitmap");
 
                         }
                     }
@@ -129,7 +130,7 @@ public class MirroringHelper {
                     @Override
                     public void postExecute() {
 
-                        Log.v("miror", "sending generating bitmap");
+                       // Log.v("miror", "sending generating bitmap");
                         listener.onBitmapAvailable(bitmap);
                     }
                 }.start();

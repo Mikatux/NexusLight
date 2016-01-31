@@ -32,16 +32,20 @@ public class LightSerial {
 
 
     public static void connect(Context  ctx) {
+        Log.v("Serial","Connect : ");
 
         // Find all available drivers from attached devices.
         UsbManager manager = (UsbManager)  ctx.getSystemService(Context.USB_SERVICE);
         List<UsbSerialDriver> availableDrivers = UsbSerialProber.getDefaultProber().findAllDrivers(manager);
         if (availableDrivers.isEmpty()) {
+            Log.v("Serial","available Drivers isEmpty ");
+
             return;
         }
 
 // Open a connection to the first available driver.
         UsbSerialDriver driver = availableDrivers.get(0);
+       // manager.requestPermission(driver.getDevice(), mPermissionIntent);
         UsbDeviceConnection connection = manager.openDevice(driver.getDevice());
         if (connection == null) {
             // You probably need to call UsbManager.requestPermission(driver.getDevice(), ..)
@@ -51,7 +55,9 @@ public class LightSerial {
 // Read some data! Most have just one port (port 0).
         port = driver.getPorts().get(0);
         try {
+            Log.v("Serial","Devices : " + driver.getPorts().size());
             port.open(connection);
+            port.setParameters(115200, UsbSerialPort.DATABITS_8, UsbSerialPort.STOPBITS_1, UsbSerialPort.PARITY_NONE);
 
             usbOpen = true;
         } catch (IOException e) {
@@ -72,11 +78,13 @@ public class LightSerial {
             }
 
         }
-        Log.v("network", "sending RED :" + coucou[477] + "GREEN :" + coucou[478] + "BLUE :" + coucou[479]);
+        Log.v("Serial", "sending RED :" + coucou[477] + "GREEN :" + coucou[478] + "BLUE :" + coucou[479]);
 
         if (usbOpen) {
             try {
                 port.write(coucou, Config.FREQUENCE_OF_SCREENSHOTS);
+               // port.w
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -93,4 +101,7 @@ public class LightSerial {
     }
 
 
+    public int getNbLight() {
+        return 12;
+    }
 }

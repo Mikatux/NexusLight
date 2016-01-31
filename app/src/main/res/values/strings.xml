@@ -2,4 +2,19 @@
     <string name="app_name">NexusLight</string>
     <string name="tap_to_change">tap to change</string>
     <string name="mirroring">Mirroring</string>
+    <string name="start">Start</string>
+    <string name="setting">Setting</string>
+    <string name="ledWidthKey">ledWidthKey</string>
+    <string name="ledHeightKey">ledHeightKey</string>
+    <string name="ledIpKey">ledIpKey</string>
+
+    <string name="numberLedWidth">Number of led Width</string>
+    <string name="numberLedHeight">Number of led Height</string>
+    <string name="ledIp">Ip address</string>
+    <string name="test">Test</string>
+    <string name="calibrate">Calibrate</string>
+    <string name="ok">OK</string>
+
+
+
 </resources>

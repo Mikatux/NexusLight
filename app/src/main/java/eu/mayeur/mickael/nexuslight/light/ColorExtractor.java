@@ -41,24 +41,32 @@ public class ColorExtractor {
             mirroring.getLatestBitmap(new MirroringHelper.Listener() {
                 @Override
                 public void onBitmapAvailable(final Bitmap bitmap) {
-                    Log.v("colorext", "get  bitmap");
+                //    Log.v("colorext", "get  bitmap");
                     ArrayList<Integer> colors = new ArrayList<Integer>();
-                    for (int i = 0; i < Config.VIRTUAL_DISPLAY_WIDTH; i++) {
-                        colors.add( bitmap.getPixel(i, 0));
+                    for (int i = 1; i < Config.VIRTUAL_DISPLAY_WIDTH; i+=2) {
+                        colors.add(bitmap.getPixel(i, 1));
                     }
-                    for (int i = 0; i<Config.VIRTUAL_DISPLAY_HEIGHT ; i++) {
+
+                    // cheat code
+
+
+                    for (int i = 3; i < Config.VIRTUAL_DISPLAY_HEIGHT; i+=2) {
                         colors.add(bitmap.getPixel(Config.VIRTUAL_DISPLAY_WIDTH - 1, i));
 
 
                     }
-                    for (int i = Config.VIRTUAL_DISPLAY_WIDTH-1; i>=0; i--) {
-                        colors.add(bitmap.getPixel(i, Config.VIRTUAL_DISPLAY_HEIGHT-1));
+                    // cheat code
+//                    colors.add(bitmap.getPixel(Config.VIRTUAL_DISPLAY_WIDTH - 1, Config.VIRTUAL_DISPLAY_HEIGHT-1));
+
+                    for (int i = Config.VIRTUAL_DISPLAY_WIDTH - 1; i >= 1; i-=2) {
+                        colors.add(bitmap.getPixel(i, Config.VIRTUAL_DISPLAY_HEIGHT - 1));
 
                     }
-                    for (int i = Config.VIRTUAL_DISPLAY_HEIGHT-1; i >=0 ; i--) {
-                        colors.add(bitmap.getPixel(0, i));
+                    for (int i = Config.VIRTUAL_DISPLAY_HEIGHT - 1; i >= 1; i-=2) {
+                        colors.add(bitmap.getPixel(1, i));
 
                     }
+
                     listener.onColorExtracted(colors);
                     new SleepTask(Config.FREQUENCE_OF_SCREENSHOTS, new SleepTask.Listener() {
                         @Override
@@ -69,24 +77,6 @@ public class ColorExtractor {
                     //Log.v("colorext", "send color");
 
 
-                    // parse bitmap to color array
-                    /*
-                    Palette.generateAsync(bitmap, 25, new Palette.PaletteAsyncListener() {
-                        @Override
-                        public void onGenerated(Palette palette) {
-                            bitmap.recycle();
-                            int defaultColor = App.get().getResources().getColor(R.color.not_recognized);
-                            final int color = palette.getVibrantColor(defaultColor);
-                            listener.onColorExtracted(color);
-                            new SleepTask(Config.FREQUENCE_OF_SCREENSHOTS, new SleepTask.Listener() {
-                                @Override
-                                public void awoken() {
-                                    extractBitmap(mirroring, listener);
-                                }
-                            }).start();
-                        }
-                    });
-                    */
                 }
             });
         }
