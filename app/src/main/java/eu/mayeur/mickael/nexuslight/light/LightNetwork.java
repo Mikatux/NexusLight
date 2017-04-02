@@ -8,9 +8,16 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 import eu.mayeur.mickael.nexuslight.core.Config;
 
@@ -18,59 +25,49 @@ import eu.mayeur.mickael.nexuslight.core.Config;
  * Created by Mika on 1/26/2016.
  */
 public class LightNetwork {
-    WebSocketClient mWebSocketClient;
-    private static boolean wsOpen = false;
     private ArrayList<Integer> prevColor = null;
 
 
-    public void connect() {
+    public static byte[] toByteArray(List<Byte> in) {
+        final int n = in.size();
+        byte ret[] = new byte[n];
+        for (int i = 0; i < n; i++) {
+            ret[i] = in.get(i);
+        }
+        return ret;
+    }
+    public void setColor(ArrayList<Integer> color) {
+        prevColor = color;
 
-        URI uri;
-        try {
-            uri = new URI("ws://" + Config.IP);
-            Log.i("Websocket", "Connection to " + Config.IP);
+        List<Byte> colors = new ArrayList<>();
+        int value = 3*9; // the 9 first pixels are black :/
+        for (int i = 0; i < color.size(); i++) { // WS2811 1pixel = 3 leds
+                colors.add(((byte) i));
+                colors.add(((byte) Math.min(Color.red(color.get(i)) * 1.4, 255)));
+                colors.add(((byte) Math.min(Color.green(color.get(i)) * 1.4, 255)));
+                colors.add(((byte) Math.min(Color.blue(color.get(i)) * 1.4, 255)));
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return;
         }
 
-        mWebSocketClient = new WebSocketClient(uri, new Draft_17()) {
-            @Override
-            public void onOpen(ServerHandshake serverHandshake) {
-                Log.i("Websocket", "Opened");
-                mWebSocketClient.send("Hello from " + Build.MANUFACTURER + " " + Build.MODEL);
-                wsOpen = true;
-            }
+        int server_port = 12345;
+        DatagramSocket s = null;
 
-            @Override
-            public void onMessage(String s) {
-                final String message = s;
-                Log.i("Websocket", "Message " + s);
+        try {
+            s = new DatagramSocket();
+            InetAddress local = InetAddress.getByName(Config.IP);
+            byte[] message = toByteArray(colors);
+            DatagramPacket p = new DatagramPacket(message, message.length,local,server_port);
+            s.send(p);
 
-            }
-
-            @Override
-            public void onClose(int i, String s, boolean b) {
-                Log.i("Websocket", "Closed " + s);
-                wsOpen = false;
-
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.i("Websocket", "Error " + e.getMessage());
-                wsOpen = false;
-
-            }
-        };
-        mWebSocketClient.connect();
-    }
-
-    public void setColor(ArrayList<Integer> color) {
-       // byte coucou[] = new byte[(Config.VIRTUAL_DISPLAY_WIDTH * 2 + Config.VIRTUAL_DISPLAY_HEIGHT * 2) * 3];
-
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // byte coucou[] = new byte[(Config.VIRTUAL_DISPLAY_WIDTH * 2 + Config.VIRTUAL_DISPLAY_HEIGHT * 2) * 3];
+/*
         int value = 3*9; // the 9 first pixels are black :/
         for (int i = value; i < color.size(); i+=3) { // WS2811 1pixel = 3 leds
             if (wsOpen) {
@@ -91,6 +88,7 @@ public class LightNetwork {
 
             }
 //*/
+/*
         }
 
         //Log.v("network", "sending RED :" + coucou[477] + "GREEN :" + coucou[478] + "BLUE :" + coucou[479]);
@@ -102,13 +100,8 @@ public class LightNetwork {
             //mWebSocketClient.send(coucou);
             // mWebSocketClient.s
         }
+        */
     }
-
-    public void disconnect() {
-        mWebSocketClient.close();
-        wsOpen = false;
-    }
-
 
     public int getNbLight() {
         return 12;

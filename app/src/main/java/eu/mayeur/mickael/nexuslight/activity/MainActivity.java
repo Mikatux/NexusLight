@@ -148,10 +148,9 @@ public class MainActivity extends Activity {
         Config.IP = ledIp;
         Config.LED_DISPLAY_WIDTH = ledWidth;
         Config.LED_DISPLAY_HEIGHT = ledHeight;
-        Config.VIRTUAL_DISPLAY_WIDTH = ledWidth*2;
-        Config.VIRTUAL_DISPLAY_HEIGHT= ledHeight*2;
+        Config.VIRTUAL_DISPLAY_WIDTH = 192;//ledWidth*2+2;
+        Config.VIRTUAL_DISPLAY_HEIGHT= 108;//ledHeight*2+2;
         return true;
-
     }
 
     @Override

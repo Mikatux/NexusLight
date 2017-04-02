@@ -58,7 +58,6 @@ public class LightsController {
     public void start() {
         Log.v("lightcontroller", "start");
 
-        mNetworkContext.connect();
         if (!mWorkingFine) {
             Log.v("lightcontroller", "start timeout");
 
@@ -71,9 +70,6 @@ public class LightsController {
     public void stop() {
         mDisconnected = true;
 
-        if (mNetworkContext != null && mWorkingFine) {
-            mNetworkContext.disconnect();
-        }
         /*
         if (mSerialContext != null && mWorkingFine) {
             mSerialContext.disconnect();
